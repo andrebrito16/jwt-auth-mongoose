@@ -47,12 +47,12 @@ class UserController {
       console.log(error);
       if (error.code === 11000) {
         // duplicate key
-        return res.json({ status: 'error', error: 'E-mail already in use' });
+        return res.status(401).json({ status: 'error', error: 'E-mail already in use' });
       }
       throw error;
     }
 
-    res.json({ status: 'ok' });
+    res.status(201).json({ status: 'Account created!' });
   }
 }
 

@@ -1,20 +1,11 @@
 import express from 'express';
 import { router } from './routes';
 import mongoose from 'mongoose';
+import { DataBaseConncetion } from './utils/mongoose';
 
 const app = express();
 
-mongoose.connect(
-  'mongodb+srv://testUser:AndreBrito@cluster0.r6xzy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    autoIndex: false,
-    poolSize: 5,
-    connectTimeoutMS: 10000,
-    family: 4
-  }
-);
+DataBaseConncetion();
 
 app.use(express.json());
 app.use(router);

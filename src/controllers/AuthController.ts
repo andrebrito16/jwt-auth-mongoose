@@ -34,7 +34,7 @@ class AuthController {
       });
     }
 
-    res.json({ status: 'error', error: 'Invalid username/password' });
+    res.status(400).json({ status: 'error', error: 'Invalid username/password' });
   }
 }
 
