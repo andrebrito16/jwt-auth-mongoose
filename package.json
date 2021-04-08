@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "npx nodemon --exec ts-node src/index.ts",
+    "dev": "ts-node-dev --files src/index.ts",
     "prettier:check": "./node_modules/.bin/prettier --check ./src",
     "prettier:write": "./node_modules/.bin/prettier --write ./src"
   },

@@ -5,8 +5,6 @@ import bcrypt from 'bcryptjs';
 const dotenvSafe = require('dotenv-safe');
 dotenvSafe.config();
 
-const JWT_SECRET =
-  'sdjkfh8923yhjdksbfma@#*(&@*!^#&@bhjb2qiuhesdbhjdsfg839ujkdhfjk';
 
 class UserController {
   async createAccount(req: Request, res: Response) {
@@ -30,7 +28,7 @@ class UserController {
 
     const userExists = await User.findOne({ email });
     if (userExists) {
-      return res.json({ error: 'Account already exists!' });
+      return res.status(400).json({ error: 'Account already exists!' });
     }
 
     const password = await bcrypt.hash(plainTextPassword, 10);
@@ -43,6 +41,7 @@ class UserController {
         lastName
       });
       console.log('User created successfully: ', response);
+      
     } catch (error) {
       console.log(error);
       if (error.code === 11000) {
@@ -52,8 +51,32 @@ class UserController {
       throw error;
     }
 
-    res.status(201).json({ status: 'Account created!' });
+    const user = await User.findOne({ email }).lean();
+
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET!,
+      { expiresIn: '1d' }
+    );
+
+    res.status(201).json({ status: 'Account created!',
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    token: token});
   }
+
+  async getUser(req: Request, res: Response) {
+    const { userId } = req;
+
+    const user = await User.findOne({ _id: userId });
+    if (!user) {
+      return res.status(404).json({ error: 'User does not exist' });
+    }
+    delete user.password;
+    return res.json(user);
+  }
+
 }
 
 export { UserController };
